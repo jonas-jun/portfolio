@@ -27,9 +27,10 @@
 
 **주요 성과**
 * **High Efficiency:** 0.4B 규모의 모델로 **GPT-5.2와 대등한 Accuracy** 달성, 0.79(GPT-5.2) -> 0.8(ModernBERT)
+* **
 * **Insight Extraction:** 플레이스 리뷰 내 195가지 속성(Aspect)에 대한 감성 및 연관 구절 자동 도출
 
-**Technical Deep-dive**
+**Technical Keywords**
 * **Model Tuning:** **HyperCLOVA X** 기반의 Decoder Instruction SFT 및 Special Token(`|aspect|`, `|positive|` 등) 도입으로 학습/추론 효율 극대화
 * **Inference Optimization:** Full generation 방식과 단일 토큰 Logit 확률값 활용 방식 비교 실험을 통한 서빙 비용 최적화
 * **Data Engineering:** 속성/감성 밸런스를 고려한 데이터셋 설계 및 Incorrect case 분석을 통한 SFT 프롬프트 반복 개선
