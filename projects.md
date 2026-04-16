@@ -2,29 +2,31 @@
 
 ---
 
-### 🔍 Place IR Encoder 고도화
-`Information Retrieval` `DPO` `Large-scale Training` | **2025. 01 - Present**
+### Place IR Encoder 고도화
+`In-domain Retriever` `Information Retrieval` `DPO` `XTR` `Multi-node Training` | **2025**
 
-> **"네이버 플레이스 AI 브리핑의 검색 품질 최적화 및 In-domain Recall 62% 향상"**
+> **"네이버 플레이스 AI 브리핑의 검색 품질 최적화 및 In-domain Recall 향상"**
 
 **주요 성과**
-* **검색 성능 혁신:** In-domain Recall을 **0.39에서 0.65로 대폭 개선**하여 AI 브리핑 내 콘텐츠 다양성 확보
-* **기술 영향력:** **NAVER DAN 25** 컨퍼런스 직접 발표 및 기술 공유
+* **도메인 특화 Retrieval 모델 제공:** 음식점(식당, 카페), 숙박시설 도메인에서 AI 브리핑(요약문) 작성을 위한 검색 모델 학습
+* **검색 성능 향상:** In-domain Recall을 **0.39에서 0.65로 대폭 개선**하여 AI 브리핑 콘텐츠 다양성 확보
+* **기술 공유:** **NAVER DAN 25** 컨퍼런스 직접 발표 및 기술 공유
+* **추가 실험:** 효율적인 고도화를 위한 학습 방법론 실험(Reinforced IR)
 
-**Technical Deep-dive**
+**Technical Keywords**
 * **Retrieval Efficiency:** **MRL(Matryoshka Representation Learning)** 및 **XTR** 도입으로 임베딩 차원 및 검색 효율 최적화
-* **Reinforced IR:** Query Generation 및 **DPO(Direct Preference Optimization)** Training을 IR 모델에 적용하여 사용자 선호도 기반 랭킹 고도화
-* **Scalable Training:** **Ray Train**과 PyTorch Lightning 기반의 Multi-node Cluster 학습 파이프라인 구축 및 **FlagEmbedding(BGE-m3)** 방식 최적화
+* **Reinforced IR:** Query Generation 및 **DPO** Training을 IR 데이터 생성에 적용하여 in-domain 선호 문서를 주입하려고 노력
+* **Scalable Training:** **Ray Train**과 Lightning 기반의 Multi-node Cluster 학습 파이프라인 구축 및 **FlagEmbedding(BGE-m3)** 방식 최적화
 
 ---
 
 ### 📝 플레이스 속성 기반 리뷰 분석 (ABSA)
-`NLP` `SFT` `Efficiency` | **2025. 12 - Present**
+`SFT` `Efficiency` | **2025. 12 - 2026. 01**
 
-> **"3B 소형 모델로 GPT-5급 성능 달성, 195가지 속성에 대한 정밀 감성 분석"**
+> **"0.4B 소형 encoder로 GPT-5급 성능 달성, 195가지 속성에 대한 정밀 감성 분석과 연관 부분 탐지"**
 
 **주요 성과**
-* **High Efficiency:** 3B 규모의 모델로 **GPT-5.2와 대등한 Accuracy(0.79 수준)** 확보 중
+* **High Efficiency:** 0.4B 규모의 모델로 **GPT-5.2와 대등한 Accuracy** 달성, 0.79(GPT-5.2) -> 0.8(ModernBERT)
 * **Insight Extraction:** 플레이스 리뷰 내 195가지 속성(Aspect)에 대한 감성 및 연관 구절 자동 도출
 
 **Technical Deep-dive**
