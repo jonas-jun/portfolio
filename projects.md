@@ -139,9 +139,26 @@
 
 ----
 
+### Fin-Aily (개인 프로젝트)
+**2026. 01 -** | `LLM` `AIOps` `GCP Cloud Run` `Pydantic` `Supabase`
+
+> **글로벌 주식 뉴스 수집부터 AI 요약/감성 분석까지 제공하는 웹서비스 구축 및 서버리스 기반 환경 구성**
+
+**주요 성과**
+- **안정적인 AI Ops 파이프라인 구축:** 기존 배포 서비스의 리소스 제약을 극복하기 위해, Google Cloud Run 기반의 서버리스 컨테이너 환경으로 백엔드 아키텍처 마이그레이션 수행
+- **풀스택 AI 서비스 런칭:** 증권 뉴스를 수직하고, LLM을 활용해 인사이트(핵심 요약 및 긍/부정 감성 분석)를 추출하는 end-to-end 서비스 개발
+- **비용 및 성능 최적화:** LLM API 사용 비용 절감 및 응답 latency 단축을 위해 캐싱을 설계하고 서버리스 Auto-Scaling 설정으로 과금 효율성을 높임
+
+**기술 키워드**
+- **AI Ops:** github-cloud build 연동을 통한 자동화 배포(CI/CD) 파이프라인 구축 및 Cloud logging으로 에러 트래킹/트러블 슈팅 경험
+- **AI pipeline 디자인:** 백엔드(GCP Cloud Run)와 LLM API 연동, 프론트엔드(Vercel)를 분리배포하여 워크로드 구성, YAML 기반 기능별 모델 설정 도입하여 각 태스크에서 가장 비용효율적인 LLM 라우팅 유연성 확보
+
+----
+
 # References
 
 - linkedin: https://www.linkedin.com/in/junho-m-60a1831b7/
 - paper studies: https://github.com/jonas-jun/AiPapers/issues
 - Chat2Order(side project): https://chat2order.streamlit.app/ (화면 확인을 위한 account `testuser / testuser123!`) https://github.com/jonas-jun/chat2order
+- Fin-Aily(side project): https://fin-aily.vercel.app/ https://github.com/jonas-jun/fin-Aily
 - NAVER DAN 25 진행 세션: https://dan.naver.com/25/sessions/691
