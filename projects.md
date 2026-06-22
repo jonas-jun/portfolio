@@ -22,7 +22,8 @@
   * Streamlit 활용하여 다중 에이전트간 로그를 확인할 수 있는 웹 데모 구현
 
 **기술 키워드**
-* **시스템 설계:** Search Agent, QnA Agent, Reserve Agent, Dialogue Agent 등 인접 agent 개발자와 함께 모듈 별 R&R 조율 및 데이터 흐름, 스키마 설계
+* **Agentic Workflow 설계:** Search Agent, QnA Agent, Reserve Agent, Dialogue Agent 등 인접 agent 개발자와 함께 각 모듈의 R&R 조율 및 시나리오별 데이터 흐름, 스키마 설계
+* **Dataset 합성:** 실제 쿼리 통계 기반으로 LLM 사용하여 에이전트 평가 데이터셋 생성
 
 ---
 
