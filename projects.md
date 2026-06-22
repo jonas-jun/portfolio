@@ -2,6 +2,30 @@
 
 ---
 
+## 🛠️ Projects
+
+### Planner for Place Agent System
+**2026. 03 -** | `Agentic Workflow` `LLM`
+
+> **in-domain agent system 내부에서 전체 워크플로우를 관장하는 오케스트레이션 Planner 모듈 개발**
+
+**주요 성과**
+* **A2A 오케스트레이션 및 동적 라우팅 설계**
+  * 대화 상태 분석(DST) 결과(Slot)와 대화 히스토리 기반으로 Planning
+  * OOD 판별(Hard OOD, Soft OOD) -> 업종 분류(vertical) -> 라우팅(to sub-agent) 순차적으로 진행하는 모듈
+  * 각 sub-agent(서치/QnA/예약) 수행 이후 결과물 기반으로 post-action(유저 발화 방출(emit) 또는 타 서브 에이전트 연계) 제어 구조 설계
+* **LLM 기반 평가셋, 파이프라인 구축**
+  * 실제 쿼리를 베이스로 GPT-5.5 사용하여 상황별 평가 데이터 구축: single-turn/multi-turn, multi-action 등의 상황
+  * Live DST/Gold DST 평가 파이프라인 구축
+  * HCX, Qwen3.6, Gemma4 계열 모델 비교 분석
+* **프로토타입 검증 및 데모**
+  * Streamlit 활용하여 다중 에이전트간 로그를 확인할 수 있는 웹 데모 구현
+
+**기술 키워드**
+* **시스템 설계:** Search Agent, QnA Agent, Reserve Agent, Dialogue Agent 등 인접 agent 개발자와 함께 모듈 별 R&R 조율 및 데이터 흐름, 스키마 설계
+
+---
+
 ### Place IR Encoder for AI briefing
 **2025** | `In-domain Retriever` `Information Retrieval` `MRL` `XTR` `Multi-node Training` `DeepSpeed` `DPO`
 
@@ -23,7 +47,7 @@
 ---
 
 ### Place IR Encoder for search & QnA subagent
-**2026. 02 -** | `LLM` `Data Generation` `Query Engineering`
+**2026. 02 - 2026. 04** | `LLM` `Data Generation` `Query Engineering`
 
 > **Agentic Query에 대응되는 Retrieval 데이터셋 구축 및 학습**
 
@@ -36,20 +60,6 @@
 **기술 키워드**
 * **Data Generation:** Syntriever 방법론 도입하여 positive, hard negative 문서 생성 및 reranking용 데이터셋 생성
 * **LLM / Prompt Engineering:** 데이터 생성, pair 검증, 문서 간 ranking 등의 모든 데이터셋 생성 작업에 multi-process LLM generation 작업 
----
-
-### Planner for Place Agent System
-**2026. 04 -** | `Agent` `LLM` `Design`
-
-> **in-domain agent system 내부에서 routing 해줄 수 있는 planner 설계(진행 중)**
-
-**주요 성과**
-* **업종 분류:** 발화와 history, slot table 기준으로 업종(vertical) 분류
-* **Query Rewrite:** 각 액션(QnA, Search, Reservation)에 적합한 형태로 query rewrite (진행 중)
-* **Soft OOD:** in-domain local agent에서 하지 못하는 작업에 대한 ood 판별
-
-**기술 키워드**
-* **시스템 설계:** Search Agent, QnA Agent, Reserve Agent, Dialogue Agent 등 인접 agent 개발자와 함께 모듈 별 R&R 조율 및 데이터 흐름, 스키마 설계
 
 ---
 
@@ -128,7 +138,7 @@
 **주요 성과**
 * **주문 정보 자동 추출:** 판매자-고객 간 채팅 내역과 상품 카탈로그를 LLM에 입력하여 주문자·상품·수량·연락처 등 핵심 정보를 구조화된 형태로 추출
 * **End-to-End 파이프라인 구축:** 채팅 파싱 → Gemini Structured Output(Pydantic 스키마) → 후처리(전화번호 정규화, 도로명 주소 API 우편번호 조회) → DB 저장 → 엑셀 다운로드 전 과정 직접 구현
-* **서비스 기능 다양화:** 카탈로그 JSON 자동 생성(재고 CSV 업로드), 최근 5회 추출 이력 조회 및 재다운로드 기능 제공
+* **서비스 기능 다양화:** 카탈로그 JSON 자동 생성(재고 CSV 업로드), 최근 5회 추출 이력 조회 및 재다운로드 기능, 주문 대화 중 내용 검색 기능 제공
 
 **기술 키워드**
 * **Structured Output:** Pydantic 스키마 기반 LLM 응답 강제 구조화로 파싱 안정성 확보
@@ -142,11 +152,13 @@
 ### Fin-Aily (개인 프로젝트)
 **2026. 01 -** | `LLM` `AIOps` `GCP Cloud Run` `Pydantic` `Supabase`
 
-> **글로벌 주식 뉴스 수집부터 AI 요약/감성 분석까지 제공하는 웹서비스 구축 및 서버리스 기반 환경 구성**
+> **AI 기반 투자 인사이트를 제공하는 웹서비스 구축 및 서버리스 기반 환경 구성**
 
 **주요 성과**
-- **안정적인 AI Ops 파이프라인 구축:** 기존 배포 서비스의 리소스 제약을 극복하기 위해, Google Cloud Run 기반의 서버리스 컨테이너 환경으로 백엔드 아키텍처 마이그레이션 수행
-- **풀스택 AI 서비스 런칭:** 증권 뉴스를 수직하고, LLM을 활용해 인사이트(핵심 요약 및 긍/부정 감성 분석)를 추출하는 end-to-end 서비스 개발
+* **안정적인 AI Ops 파이프라인 구축:** 기존 배포 서비스의 리소스 제약을 극복하기 위해, Google Cloud Run 기반의 서버리스 컨테이너 환경으로 백엔드 아키텍처 마이그레이션 수행
+* **풀스택 AI 서비스 런칭**
+  * 국내 버전: Dart API와 증권사 리포트(naver finance)를 기반으로 기관 투자자급 리포트 생성: 실적/현금흐름, 리스크 요인, 사업보고서 내용 변동 내역, 체크리스트 추출 등
+  * 글로벌 버전: 증권 뉴스를 수집하고, LLM을 활용해 인사이트(핵심 요약 및 긍/부정 감성 분석)를 추출하는 end-to-end 서비스 개발
 - **비용 및 성능 최적화:** LLM API 사용 비용 절감 및 응답 latency 단축을 위해 캐싱을 설계하고 서버리스 Auto-Scaling 설정으로 과금 효율성을 높임
 
 **기술 키워드**
@@ -159,6 +171,10 @@
 
 - linkedin: https://www.linkedin.com/in/junho-m-60a1831b7/
 - paper studies: https://github.com/jonas-jun/AiPapers/issues
-- Chat2Order(side project): https://chat2order.streamlit.app/ (화면 확인을 위한 account `testuser / testuser123!`) https://github.com/jonas-jun/chat2order
-- Fin-Aily(side project): https://fin-aily.vercel.app/ https://github.com/jonas-jun/fin-Aily
+- Chat2Order(side project):
+    - https://chat2order.streamlit.app/ (화면 확인을 위한 account `testuser / testuser123!`)
+    - https://github.com/jonas-jun/chat2order
+- Fin-Aily(side project):
+    - https://fin-aily-kr.vercel.app/
+    - https://fin-aily-us.vercel.app/
 - NAVER DAN 25 진행 세션: https://dan.naver.com/25/sessions/691
