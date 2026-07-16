@@ -132,7 +132,7 @@
 ---
 
 ### Chat2Order (개인 프로젝트)
-**2026. 03 -** | `LLM` `Structured Output` `Streamlit` `Gemini API` `Pydantic` `Supabase`
+**2026. 03 -** | `LLM` `Structured Output` `Railway` `Streamlit` `Gemini API` `Pydantic` `Supabase`
 
 > **소규모 판매자를 위한 메신저 주문 대화를 자동으로 분석해 엑셀 주문서로 변환하는 서비스**
 
@@ -144,7 +144,7 @@
 **기술 키워드**
 * **Structured Output:** Pydantic 스키마 기반 LLM 응답 강제 구조화로 파싱 안정성 확보
 * **Gemini API:** Google GenAI SDK를 활용한 멀티턴 채팅 분석 및 JSON 모드 응답 처리
-* **Backend:** Supabase를 통한 사용자 인증 및 추출 이력 저장
+* **Backend:** Supabase를 통한 사용자 인증 및 추출 이력 저장, Railway 배포
 * **Frontend:** Streamlit으로 업로드·결과 확인·다운로드 통합 UI 
 * **1인 개발:** 니즈 파악에서 시작하여 기획, 페이지 설계, 백/프론트 구현, prompt engineering, 유지 보수를 AI와 함께 진행
 
@@ -153,13 +153,13 @@
 ### Fin-Aily (개인 프로젝트)
 **2026. 01 -** | `LLM` `AIOps` `GCP Cloud Run` `Pydantic` `Supabase`
 
-> **AI 기반 투자 인사이트를 제공하는 웹서비스 구축 및 서버리스 기반 환경 구성**
+> **AI 기반 기관투자자급 보고서와 투자 인사이트를 제공하는 웹서비스 구축 및 서버리스 기반 환경 구성**
 
 **주요 성과**
 * **안정적인 AI Ops 파이프라인 구축:** 기존 배포 서비스의 리소스 제약을 극복하기 위해, Google Cloud Run 기반의 서버리스 컨테이너 환경으로 백엔드 아키텍처 마이그레이션 수행
 * **풀스택 AI 서비스 런칭**
   * 국내 버전: Dart API와 증권사 리포트(naver finance)를 기반으로 기관 투자자급 리포트 생성: 실적/현금흐름, 리스크 요인, 사업보고서 내용 변동 내역, 체크리스트 추출 등
-  * 글로벌 버전: 증권 뉴스를 수집하고, LLM을 활용해 인사이트(핵심 요약 및 긍/부정 감성 분석)를 추출하는 end-to-end 서비스 개발
+  * 글로벌 버전: 공시 기반 Deep Research 보고서 제공, 증권 뉴스를 수집하고, LLM을 활용해 인사이트(핵심 요약 및 긍/부정 감성 분석)를 추출하는 end-to-end 서비스 개발
 - **비용 및 성능 최적화:** LLM API 사용 비용 절감 및 응답 latency 단축을 위해 캐싱을 설계하고 서버리스 Auto-Scaling 설정으로 과금 효율성을 높임
 
 **기술 키워드**
@@ -173,7 +173,7 @@
 - linkedin: https://www.linkedin.com/in/junho-m-60a1831b7/
 - paper studies: https://github.com/jonas-jun/AiPapers/issues
 - Chat2Order(side project):
-    - https://chat2order.streamlit.app/ (화면 확인을 위한 account `testuser / testuser123!`)
+    - https://chat2order.up.railway.app/ (화면 확인을 위한 account `testuser / testuser123!`)
     - https://github.com/jonas-jun/chat2order
 - Fin-Aily(side project):
     - https://fin-aily-kr.vercel.app/
