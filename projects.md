@@ -23,6 +23,8 @@
   * 규칙 골격 → LLM 표현 변주 → 결정 함수 라벨링 → 게이트 검증 방식으로 약 7.3만(train) / 6.4천(eval) 규모 데이터셋을 버전 단위(release + sha256 manifest)로 관리
   * 데이터 생성 엔진을 효율화 & 고도화 실험: Qwen3.8-27B-FP8 단일 H100 vLLM 생성
 * **평가 체계 및 결함 분석**
+  * 실제 쿼리를 베이스로 GPT-5.5 사용하여 상황별 평가 데이터 구축: single-turn/multi-turn, multi-action 등의 상황
+  * Live DST/Gold DST 평가 파이프라인 구축
   * **정량적, AI Judge 하이브리드** routing EM, branch query F1, action sequence F1, JSON validity 등 정량 지표에 LLM-judge(OK/환각/누락/모순)를 더한 평가 파이프라인. 정량 지표가 놓친 gold 오류를 judge로 역검출 (261건 중 253건)
   * 실서비스 trace(Langfuse) 기반 결함 triage: 재현 → 원인 계층(모델 / 규칙 / Extractor / Resolver) 귀속 → 데이터·코드 수정. 오프라인 지표가 1.000인데도 라이브에서 발생하는 결함을 계층별로 분리해 해결
   * HCX, Qwen3.6/3.8, Gemma4, gpt-oss 등 모델 비교 (업종 분류 정확도 0.85 ~ 0.987)
