@@ -73,11 +73,13 @@
 **주요 성과**
 * **2개 도메인 Agentic Query IR encoder 학습:** 식당, 미용실 도메인용 검색기 학습
 * **Agentic Query 분리:** 생성된 예상 질문에서 rewrite된 쿼리들을 대상으로 빈도별/클러스터별/의미상 Dedup 적용하여 학습, 평가셋 쿼리 구축
+* **추론 효율성:** 적은 자원으로 효율적인 추론을 하기 위해 MRL(1024dim > 64dim), XTR(top-k tokens retrieval) 도입 
 * **Query-Doc pair dataset:** 식당 2M, 미용실 1.5M 수준 positive, hard negative, negative로 구성된 Retrieval 학습용 데이터셋 생성
 * **고퀄리티 문서 생성:** 생성 -> 검증 파이프라인을 통한 퀄리티 좋은 positive, hard negative 문서 생성(prompt engineering)
 
 **기술 키워드**
 * **Data Generation:** Syntriever 방법론 도입하여 positive, hard negative 문서 생성 및 reranking용 데이터셋 생성
+* **Engineering:** dimension reduction, top-k tokens retrieval
 * **LLM / Prompt Engineering:** 데이터 생성, pair 검증, 문서 간 ranking 등의 모든 데이터셋 생성 작업에 multi-process LLM generation 작업 
 
 ---
@@ -149,7 +151,30 @@
 
 ---
 
-### Chat2Order (개인 프로젝트)
+### 공시 Q&A 에이전트 — dart-agent (개인 프로젝트, 진행 중)
+**2026. 10 -** | `RAG` `MCP` `LangGraph` `OpenSearch` `PostgreSQL` `Neo4j` `Hybrid Search` `AWS`
+
+> **사업보고서·재무 데이터를 대상으로 본문 검색(Vector) · 수치 조회(RDB) · 관계 조회(Graph)를 MCP 도구로 묶어 라우팅하는 금융 공시 Q&A 에이전트. 파싱부터 평가·배포까지 전 구간 직접 구현**
+
+**진행한 것**
+* **트랙 분리 설계:** 수집·파싱 어댑터만 소스별(SEC EDGAR 10-K / DART 사업보고서)로 두고 청킹 이후는 공통 파이프라인으로 설계. DART API 점검 기간에 EDGAR 트랙을 먼저 진행
+* **수집:** EDGAR 10-K 원문·정정(10-K/A)·XBRL companyfacts·Exhibit 21(종속회사) 수집. 요청 한도·재시도 처리, 원본 불변 + 날짜별 스냅숏으로 재현성 확보
+* **문서 파싱:** inline XBRL HTML에서 섹션 계층(16건, 1,380 섹션)과 표를 추출. 병합 셀을 펼쳐 마크다운 표로 변환하고 표 제목·단위·기준일을 붙여 수치 오인 방지
+* **재무 지표 추출:** XBRL 태그 우선, 없으면 재무제표 표에서 보완하고 값의 출처(`xbrl`/`table`/`manual`)를 기록
+* **청킹 전략 3종:** 고정 길이(512/64) · 섹션 단위 · 섹션 경로 접두어(contextual prefix)를 bge-m3 토크나이저 기준으로 구현, 표는 쪼개지 않도록 제약
+* **인덱싱:** bge-m3 임베딩을 OpenSearch에 적재, BM25 · kNN · 하이브리드(min-max 정규화) 검색 구현. 인덱스 교체 원자화로 재적재 시 서비스 중단 방지
+
+**진행 예정**
+* **DB 구축:** PostgreSQL(재무 지표, 읽기 전용 계정), Neo4j(종속회사·임원 관계 그래프)
+* **MCP 서버:** `search_filings` · `query_financials` · `query_relations` · `get_filing_section` 도구. **LLM이 SQL/Cypher를 직접 쓰지 않고** 고정 쿼리 + 파라미터 바인딩만 허용, 모든 응답에 출처(접수번호·섹션 경로) 첨부
+* **에이전트:** LangGraph로 질문 분류·계획 → 도구 실행 → 충분성 판단 → 답변 구조. step 상한·재시도 정책, 투자 권유 답변 차단
+* **평가:** 검색은 LLM 없이 Recall@5·MRR@10으로 청킹 3종 / BM25·벡터·하이브리드 / 임베딩 파인튜닝 전후 비교, 답변은 골든셋 80문항 LLM-judge + 수동 검수
+* **DART 트랙 합류:** 사업보고서(한국어, `nori` 분석기)
+* **배포:** FastAPI + Docker → AWS ECS Fargate, RDS, CloudWatch
+
+----
+
+### Chat2Order (개인 프로젝트) - 현재 운영 종료
 **2026. 03 -** | `LLM` `Structured Output` `Railway` `Streamlit` `Gemini API` `Pydantic` `Supabase`
 
 > **소규모 판매자를 위한 메신저 주문 대화를 자동으로 분석해 엑셀 주문서로 변환하는 서비스**
