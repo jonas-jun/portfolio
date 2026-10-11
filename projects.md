@@ -5,25 +5,41 @@
 ## 🛠️ Projects
 
 ### Planner for Place Agent System
-**2026. 03 -** | `Agentic Workflow` `LLM`
+**2026. 03 -** | `Agentic Workflow` `A2A` `Orchestration` `SFT/DPO` `Guardrail` `LLMOps`
 
-> **in-domain agent system 내부에서 전체 워크플로우를 관장하는 오케스트레이션 Planner 모듈 개발**
+> **네이버 플레이스 멀티 에이전트 시스템(A2A)에서 매 턴 "무엇을, 어느 에이전트가, 어떤 순서로" 수행할지 결정하는 오케스트레이션 Planner 모듈을 설계부터 모델 학습·서빙·운영까지 end-to-end 담당**
 
 **주요 성과**
-* **A2A 오케스트레이션 및 동적 라우팅 설계**
-  * 대화 상태 분석(DST) 결과(Slot)와 대화 히스토리 기반으로 Planning
-  * OOD 판별(Hard OOD, Soft OOD) -> 업종 분류(vertical) -> 라우팅(to sub-agent) 순차적으로 진행하는 모듈
-  * 각 sub-agent(서치/QnA/예약) 수행 이후 결과물 기반으로 post-action(유저 발화 방출(emit) 또는 타 서브 에이전트 연계) 제어 구조 설계
-* **LLM 기반 평가셋, 파이프라인 구축**
-  * 실제 쿼리를 베이스로 GPT-5.5 사용하여 상황별 평가 데이터 구축: single-turn/multi-turn, multi-action 등의 상황
-  * Live DST/Gold DST 평가 파이프라인 구축
-  * HCX, Qwen3.6, Gemma4 계열 모델 비교 분석
+* **Planner 런타임 설계 및 구현 (A2A 오케스트레이션)**
+  * OOD 판별 → 업종 분류(vertical) → 라우팅(Search / QnA / Reservation sub-agent)의 cascade 구조를 설계하고, 이후 **단일 모델이 한 번의 호출로 분기(branch)·업종·액션을 함께 결정**하는 구조로 통합
+  * sub-agent 실행 결과를 보고 다음 액션 연계 또는 유저 응답 방출(emit)을 결정하는 **post-subagent 제어 루프** 설계. 한 턴 안의 멀티 액션(검색 → QnA → 예약)과 멀티 브랜치 병렬 실행 지원
+  * DST(대화 상태)와 Extractor/POI Resolver 결과를 입력으로 쓰도록 설계하고, 기준 장소(anchor)·제외 장소(excluded) 같은 **장소 역할 정보를 입력 계약에 추가**해 "A 근처", "A 말고" 류 질의 대응력 향상
+* **Planner 전용 모델 학습: 9차례 이상 서빙 모델 교체**
+  * Gemma-4 E4B 기반 LoRA SFT (+ DPO 보정 라운드)를 v2부터 v5-10까지 결함 축 단위 데이터 라운드로 고도화
+  * **Routing 정확도 0.946 → 0.975**, branch query F1 0.629 → 0.688, 예약 연계 오류 29건 → 3건, JSON 유효율 100%
+  * 26B MoE 대비 E4B 비교 실험: LoRA가 fused expert/router에 붙지 않아 학습 파라미터가 절반에 그친 원인을 규명. 동일 데이터에서 성능 우위가 없음을 확인하고 **서빙 비용이 낮은 4B급 모델을 유지**
+  * 업종 라벨을 9 → 13개(헤어/네일/약국 등)로 세분화하는 relabel 수행. 결정론 규칙과 LLM 판정 후 보류된 1~3%는 사람이 직접 리뷰
+* **데이터셋 합성 파이프라인**
+  * 규칙 골격 → LLM 표현 변주 → 결정 함수 라벨링 → 게이트 검증 방식으로 약 7.3만(train) / 6.4천(eval) 규모 데이터셋을 버전 단위(release + sha256 manifest)로 관리
+  * 데이터 생성 엔진을 효율화 & 고도화 실험: Qwen3.8-27B-FP8 단일 H100 vLLM 생성
+* **평가 체계 및 결함 분석**
+  * **정량적, AI Judge 하이브리드** routing EM, branch query F1, action sequence F1, JSON validity 등 정량 지표에 LLM-judge(OK/환각/누락/모순)를 더한 평가 파이프라인. 정량 지표가 놓친 gold 오류를 judge로 역검출 (261건 중 253건)
+  * 실서비스 trace(Langfuse) 기반 결함 triage: 재현 → 원인 계층(모델 / 규칙 / Extractor / Resolver) 귀속 → 데이터·코드 수정. 오프라인 지표가 1.000인데도 라이브에서 발생하는 결함을 계층별로 분리해 해결
+  * HCX, Qwen3.6/3.8, Gemma4, gpt-oss 등 모델 비교 (업종 분류 정확도 0.85 ~ 0.987)
 * **프로토타입 검증 및 데모**
-  * Streamlit 활용하여 다중 에이전트간 로그를 확인할 수 있는 웹 데모 구현
+  * Streamlit 기반 Planner I/O 데모: 조립된 프롬프트 → 모델 raw 출력 → 규칙 후처리 → 브랜치/DST/실행 결과를 단계별로 확인하고, 모델 버전(arm)별로 비교
+
+**에이전트 설계 관점의 강점**
+* **통제 가능한 오케스트레이션:** Pydantic `extra=forbid` 계약과 순서·유일성 불변식, guided decoding, greedy(temperature 0)로 **같은 입력에 같은 결정**을 보장
+* **서비스에 필요한 가드레일:** 유해·불법·자해·해외·미지원 업종 요청을 **LLM 호출 전 규칙 게이트**에서 차단하고 차단 사유를 로그로 남김. 미차단뿐 아니라 과차단(예: 상호명 오탐)도 회귀 테스트로 고정
+* **평가와 재현을 위한 실험 설계:** 프롬프트 SHA와 학습 config, 서빙 모델 계보(서빙 ↔ config ↔ 실험 run)를 테스트로 고정. 서빙 릴리스마다 재현 커맨드가 포함된 실험 카드와 판정 근거를 기록
+* **변경 관리(Change Management):** 스테이징 → 라이브 프로브 → 운영 순서의 단계적 배포. 롤백 확보
+* **모델링 엔지니어 관점에서의 장애 대응:** 외부 LLM 호출의 재시도·타임아웃·동시성 상한을 명시적으로 관리. 실패 시 안전한 fallback 응답을 내고, 오류는 삼키지 않고 구조화해서 노출
 
 **기술 키워드**
-* **Agentic Workflow 설계:** Search Agent, QnA Agent, Reserve Agent, Dialogue Agent 등 인접 agent 개발자와 함께 각 모듈의 R&R 조율 및 시나리오별 데이터 흐름, 스키마 설계
-* **Dataset 합성:** 실제 쿼리 통계 기반으로 LLM 사용하여 에이전트 평가 데이터셋 생성
+* **Agentic Workflow 설계:** Search / QnA / Reservation / DST 에이전트 개발자와 R&R 조율, 에이전트 간 입출력 스키마와 시나리오별 데이터 흐름 설계
+* **Model Training & Serving:** Gemma-4 LoRA SFT/DPO (H100 multi-node), DPO 메모리 최적화(262k vocab log-softmax chunking), KServe + vLLM 서빙, LoRA merge 아티팩트 검증(logit parity)
+* **Evaluation & Quality:** 결함 사례를 영구 회귀셋으로 전환, 반례(counterfactual) 쌍 데이터 설계, planner 모듈 테스트 1,600여 개로 계약 검증
 
 ---
 
